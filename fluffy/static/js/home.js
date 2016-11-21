@@ -27,14 +27,12 @@ $(document).ready(function() {
             fh.slideUp(duration);
             pb.slideDown(duration, function() {
                 transitioningModes = false;
-                $(document).off("paste", pastefile);
             });
         } else {
             container.animate({'width': '580px'}, duration);
             pb.slideUp(duration);
             fh.slideDown(duration, function() {
                 transitioningModes = false;
-                $(document).on("paste", pastefile);
             });
         }
     });
@@ -67,10 +65,8 @@ $(document).ready(function() {
         }
     });
 
-    // default use pastefile handler, if we are not in paste mode
-    if ($("#file-holder").is(":visible")) {
-        $(document).on("paste", pastefile);
-    }
+    // default use pastefile handler
+    $(document).on("paste", pastefile);
 
     // uploading
     $("#upload").click(function() {
@@ -86,6 +82,10 @@ $(document).ready(function() {
 // Event handler for pasting files. Disabled when the pastebin form is in use.
 // Targeted toward uploading images similar to imgur
 function pastefile(e) {
+    var fh = $("#file-holder");
+    if (!fh.is(":visible")) {
+        return;
+    }
     var dt = (e.clipboardData || e.originalEvent.clipboardData);
     if (dt) {
         for (var i = 0; i < dt.items.length; i ++) {
